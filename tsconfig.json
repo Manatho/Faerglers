@@ -11,7 +11,7 @@
         "noUnusedParameters": true,
         "sourceMap": true,
         "skipLibCheck": true,
-        "allowJs": true,
         "jsx": "preserve"
-    }
+    },
+    "exclude": ["dist"]
 }
