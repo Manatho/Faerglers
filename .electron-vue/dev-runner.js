@@ -168,13 +168,12 @@ function greeting() {
   const cols = process.stdout.columns;
   let text = '';
 
-  if (cols > 104) text = 'electron-vue';
-  else if (cols > 76) text = 'electron-|vue';
+  if (cols > 104) text = 'Faerglers';
   else text = false;
 
   if (text) {
     say(text, {
-      colors: ['yellow'],
+      colors: ['blue'],
       font: 'simple3d',
       space: false
     });
