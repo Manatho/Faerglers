@@ -4,12 +4,7 @@
       "semicolon": [true, "always"],
       "indent": [true, "spaces"],
       "ter-indent": [true, 2],
-      "space-before-function-paren": [true, {
-        "anonymous": "always",
-        "named": "never",
-        "asyncArrow": "ignore"
-      }],
-      "no-empty": false
-      
+      "no-empty": false,
+      "space-before-function-paren": false
     }
   }

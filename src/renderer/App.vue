@@ -5,11 +5,11 @@
 </template>
 
 <script>
-  export default {
-    name: 'faerglers'
-  }
+export default {
+  name: 'faerglers'
+};
 </script>
 
 <style>
-  /* CSS */
+/* CSS */
 </style>
