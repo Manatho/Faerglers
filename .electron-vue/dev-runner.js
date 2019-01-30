@@ -16,6 +16,9 @@ let electronProcess = null;
 let manualRestart = false;
 let hotMiddleware;
 
+let hasErrors = false;
+let error = null;
+
 function logStats(proc, data) {
   let log = '';
 
@@ -65,6 +68,8 @@ function startRenderer() {
 
     compiler.hooks.done.tap('done', stats => {
       logStats('Renderer', stats);
+      hasErrors = stats.hasErrors();
+      error = stats.compilation.errors;
     });
 
     const server = new WebpackDevServer(compiler, {
@@ -186,7 +191,12 @@ function init() {
 
   Promise.all([startRenderer(), startMain()])
     .then(() => {
-      startElectron();
+      if(!hasErrors){
+        startElectron();
+      } else {
+        electronLog("Failed to compile: \n" + error, "red")
+        process.exit();
+      }
     })
     .catch(err => {
       console.error(err);
