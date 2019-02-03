@@ -57,7 +57,10 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "encoding-down": "^6.0.1",
     "jslint": "^0.12.0",
+    "leveldown": "^4.0.1",
+    "levelup": "^4.0.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
@@ -65,6 +68,10 @@
     "vuex-electron": "^1.0.0"
   },
   "devDependencies": {
+    "@types/encoding-down": "^5.0.0",
+    "@types/leveldown": "^4.0.0",
+    "@types/levelup": "^3.1.0",
+    "@types/node": "^10.12.21",
     "ajv": "^6.5.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
