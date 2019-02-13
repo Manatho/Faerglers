@@ -1,3 +1,6 @@
+import { Entry } from './Entry';
+import { DataSeriesMapper } from './DataSeriesMapper';
+
 export interface IStoreData {
   /**
    * Stores the specified entry in the datastore
@@ -32,58 +35,4 @@ export interface IStoreData {
    * @param callback called when store has been closed.
    */
   close(callback: () => void): void;
-}
-
-export class DataSeriesMapper {
-  private _mapping: Map<string, number>;
-  public readonly names: string[];
-
-  constructor(dataseriesNames: string[]) {
-    this._mapping = new Map();
-    dataseriesNames.forEach((name, i) => {
-      this._mapping.set(name, i);
-    });
-
-    this.names = [...this._mapping.keys()];
-  }
-
-  /**
-   * Gets the index associated with the dataseries
-   * @param dataseriesName name of the dataseries to get index of
-   */
-  public indexOf(dataseriesName: string) {
-    return this._mapping.get(dataseriesName);
-  }
-
-  /**
-   * Converts the object to json, use the static method 'fromJson' to convert it back to an object
-   */
-  public toJson(): string {
-    return JSON.stringify([...this._mapping]);
-  }
-
-  /**
-   * Returns a new DataSeriesMapper based on the json supplied.
-   * @param json the json generated from calling 'toJson' on an DataSeriesMapper
-   */
-  public static fromJson(json: string): DataSeriesMapper {
-    let temp = new DataSeriesMapper([]);
-    temp._mapping = new Map(JSON.parse(json));
-    return temp;
-  }
-}
-
-export class Entry {
-  public timestamp: number;
-  public values: number[];
-
-  /**
-   * @param timestamp Unix timestamp in seconds
-   * @param values Array of doubles, each index corrosponding to a specific dataseries,
-   * the mapping of indexes to dataseries is not handled.
-   */
-  constructor(timestamp: number, value: number[]) {
-    this.timestamp = timestamp;
-    this.values = value;
-  }
 }

@@ -1,4 +1,6 @@
-import { IStoreData, Entry, DataSeriesMapper } from './IStoreData';
+import { IStoreData } from './IStoreData';
+import { DataSeriesMapper } from './DataSeriesMapper';
+import { Entry } from './Entry';
 import { AbstractBatch } from 'abstract-leveldown';
 import levelup, { LevelUp } from 'levelup';
 import leveldown from 'leveldown';
