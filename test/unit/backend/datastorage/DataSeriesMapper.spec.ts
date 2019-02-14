@@ -21,4 +21,8 @@ describe('DataSeriesMapper', () => {
     let dsMapperFromJson = DataSeriesMapper.fromJson(dsmapperJson);
     expect(dsMapperFromJson).to.deep.equal(dsmapper);
   });
+  it('Should map indexes correctly when parsing from json based on key rather than order', () => {
+    let dsMapperFromJson = DataSeriesMapper.fromJson('[["dataseries2",1],["dataseries3",2], ["dataseries1",0]]');
+    expect(dsMapperFromJson).to.deep.equal(dsmapper);
+  });
 });
