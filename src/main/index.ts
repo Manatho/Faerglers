@@ -29,7 +29,7 @@ function createWindow() {
   mainWindow.loadURL(winURL);
 
   mainWindow.on('closed', () => {
-    mainWindow = null;
+    mainWindow = null as any;
   });
 }
 

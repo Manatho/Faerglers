@@ -22,9 +22,7 @@ export class LevelDataStore implements IStoreData {
       }
     } else {
       fs.mkdirSync(path, { recursive: true });
-      fs.writeFile(path + '/dataseriesMapper.json', dataSeriesMapper.toJson(), err => {
-        if (err) console.log(err);
-      });
+      fs.writeFileSync(path + '/dataseriesMapper.json', dataSeriesMapper.toJson());
     }
 
     // Creates/opens database and sets encoders and decoders
@@ -47,31 +45,21 @@ export class LevelDataStore implements IStoreData {
   }
 
   /**
-   * Stores the specified entry in the datastore
-   * @param timestamp Unix timestamp in seconds
-   * @param values Array of doubles, each index corrosponding to a specific dataseries
-   * the mapping of indexes to dataseries is not handled.
-   * @throws an error when the amount of values do not match the amount of dataseries
-   */
-  public put(key: number, values: number[]) {
-    if (values.length !== this.dsMapper.names.length) throw new Error('Amount of values do not match with the amount of dataseries');
-    this.db.put(key, values);
-  }
-
-  /**
    * Stores all entries specified
    * @param entries An a array of key-value pairs.
    * @throws an error when the amount of values do not match the amount of dataseries
    */
-  public async putAll(entries: Entry[]) {
+  public put(entries: Entry[], callback?: () => void) {
     let ops: AbstractBatch[];
+    ops = new Array();
     entries.forEach(entry => {
       if (entry.values.length !== this.dsMapper.names.length) throw new Error('Amount of values do not match with the amount of dataseries');
       ops.push({ type: 'put', key: entry.timestamp, value: entry.values });
     });
-    await this.db.batch();
+    this.db.batch(ops, callback);
   }
 
+  // TODO: Throw expection when start is bigger than end
   /**
    * Returns the entries in the specified range, containing the specified dataseries.
    * @param start Inclusive start unix timestamp of the range.
@@ -79,12 +67,12 @@ export class LevelDataStore implements IStoreData {
    * @param callback Use this to process the data, one entry is passed at a time, last entry is null and 'finished' will be true.
    * @param dataseries specifies which and the order of the dataseries returned, if undefined all dataseries are returned in the order of the DataseriesMapper
    */
-  public get(start: number, end: number, callback: (data: Entry, finished: boolean) => void, ...dataseries: string[]) {
+  public get(start: number, end: number, callback: (data: Entry | null, finished: boolean) => void, ...dataseries: string[]) {
     this.db
       .createReadStream({ gte: start, lte: end })
       .on('data', (data: { key: number; value: number[] }) => {
         if (dataseries.length !== 0) {
-          callback({ timestamp: data.key, values: dataseries.map(name => this.dsMapper.indexOf(name)).map(i => data.value[i]) }, false);
+          callback({ timestamp: data.key, values: dataseries.map(name => this.dsMapper.indexOf(name)).map(i => data.value[i!]) }, false);
         } else {
           callback({ timestamp: data.key, values: data.value }, false);
         }
@@ -115,7 +103,7 @@ export class LevelDataStore implements IStoreData {
 // -------------------------------------------
 
 function encodeInt(n: number) {
-  let buffer = Buffer.alloc(8);
+  let buffer = Buffer.alloc(4);
   buffer.writeInt32BE(n, 0);
   return buffer;
 }

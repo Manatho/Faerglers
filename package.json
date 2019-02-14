@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "Manatho <mathies-h@hotmail.com>",
   "description": "a faerglers program",
-  "license": null,
+  "license": "",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -19,7 +19,7 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "test": "npm run unit && npm run e2e",
     "unit-front": "karma start test/unit/frontend/karma.conf.js",
-    "unit-back": "nyc mocha -r ts-node/register test/unit/backend/**/*.spec.ts",
+    "unit-back": "nyc mocha -r ts-node/register test/unit/backend/**/*.spec.ts & node test/unit/backend/clean.js",
     "unit": "npm run unit-back && npm run unit-front",
     "postinstall": "npm run lint:fix"
   },
@@ -162,7 +162,10 @@
       "ts-node/register"
     ],
     "exclude": [
-      "**/*.d.ts"
+      "**/*.d.ts",
+      "**/[I][A-Z]*.ts",
+      "src/main/index.dev.ts",
+      "src/main/index.ts"
     ],
     "reporter": [
       "html",

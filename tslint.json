@@ -1,11 +1,11 @@
 {
-    "extends": "tslint-config-standard",
-    "rules": {
-      "semicolon": [true, "always"],
-      "indent": [true, "spaces"],
-      "ter-indent": [true, 2],
-      "no-empty": false,
-      "space-before-function-paren": false,
-      "member-access": true
-    }
+  "extends": ["tslint-config-standard", "tslint-no-unused-expression-chai"],
+  "rules": {
+    "semicolon": [true, "always"],
+    "indent": [true, "spaces"],
+    "ter-indent": [true, 2],
+    "no-empty": false,
+    "space-before-function-paren": false,
+    "member-access": true
   }
+}

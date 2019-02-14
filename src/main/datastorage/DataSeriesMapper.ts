@@ -18,7 +18,7 @@ export class DataSeriesMapper {
    * Gets the index associated with the dataseries
    * @param dataseriesName name of the dataseries to get index of
    */
-  public indexOf(dataseriesName: string) {
+  public indexOf(dataseriesName: string): number | undefined {
     return this._mapping.get(dataseriesName);
   }
 
