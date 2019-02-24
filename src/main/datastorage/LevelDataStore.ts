@@ -59,7 +59,6 @@ export class LevelDataStore implements IStoreData {
     this.db.batch(ops, callback);
   }
 
-  // TODO: Throw expection when start is bigger than end
   /**
    * Returns the entries in the specified range, containing the specified dataseries.
    * @param start Inclusive start unix timestamp of the range.
@@ -68,6 +67,9 @@ export class LevelDataStore implements IStoreData {
    * @param dataseries specifies which and the order of the dataseries returned, if undefined all dataseries are returned in the order of the DataseriesMapper
    */
   public get(start: number, end: number, callback: (data: Entry | null, finished: boolean) => void, ...dataseries: string[]) {
+    if (start > end) {
+      throw new Error(`Argument error -> start: ${start} is bigger than end: ${end}`);
+    }
     this.db
       .createReadStream({ gte: start, lte: end })
       .on('data', (data: { key: number; value: number[] }) => {

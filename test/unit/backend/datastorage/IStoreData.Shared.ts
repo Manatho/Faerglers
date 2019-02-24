@@ -105,6 +105,11 @@ export function IStoreDataTestSuit(sharedData: SharedData) {
 
         checkValues(sharedData.getStore, 3, 6, expected, done, 'dataseries2', 'dataseries1');
       });
+      it('Should throw an error when start is set to a larger value than end', () => {
+        expect(() => {
+          sharedData.getStore.get(20, 10, () => {});
+        }).to.throw();
+      });
     });
   });
 }
