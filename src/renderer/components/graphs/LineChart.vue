@@ -24,16 +24,30 @@
                     <div class="settings_bar">
                         <a @click="closeSettings" class="settings_bar_button left fas fa-times"></a>
                     </div>
-                    <div class="lines">
-                        <div class="line_settings">
-                            <div>Color</div>
-                            <div>Enabled</div>
-                        </div>
-                        <div v-for="line in lines" class="line_settings">
-                            <input type="color" v-model="line.color">
-                            <input type="checkbox" v-model="line.render">
-                        </div>
+
+                    <div class="line_settings">
+                        <div>Color</div>
+                        <div>Enabled</div>
                     </div>
+                    <draggable
+                        element="ul"
+                        class="line_settings_container"
+                        v-model="lines"
+                        :options="{animation: 200}"
+                        @start="drag =true"
+                        @end="drag =false"
+                    >
+                        <transition-group type="transition" :name="!drag ? 'flip-list' : null">
+                            <li class="line_settings" v-for="line in lines" :key="line.order">
+                                <input type="color" v-model="line.color">
+                                <!-- <input type="checkbox" v-model="line.render"> -->
+                                <label class="container">
+                                    <input type="checkbox" class="radioinput" v-model="line.render">
+                                    <span class="radio"></span>
+                                </label>
+                            </li>
+                        </transition-group>
+                    </draggable>
                 </div>
             </div>
         </transition>
@@ -42,10 +56,15 @@
 
 <script>
 import * as d3 from 'd3';
+import Draggable from 'vuedraggable';
 export default {
   name: 'VueLineChart',
+  components: {
+    Draggable
+  },
   data() {
     return {
+      drag: false,
       data: [
         [1, [0, 1, 2]], //
         [2, [-1, 2, 2]],
@@ -56,9 +75,9 @@ export default {
         [7, [-1, 2, 10]]
       ],
       lines: [
-        { data: null, color: '#FF4136', render: true }, //
-        { data: null, color: '#7FDBFF', render: false },
-        { data: null, color: '#0074D9', render: true }
+        { order: 1, data: null, color: '#FF4136', render: true }, //
+        { order: 2, data: null, color: '#7FDBFF', render: false },
+        { order: 3, data: null, color: '#0074D9', render: true }
       ],
       width: 0,
       height: 0,
@@ -87,16 +106,12 @@ export default {
   },
   methods: {
     closeSettings(event) {
-      console.log(event);
-
       this.showSettings = false;
     },
     openSettings() {
       this.showSettings = true;
     },
     toggleLine(line) {
-      console.log(line);
-
       line.render = !line.render;
     },
     onMouseOver(event) {
@@ -173,6 +188,7 @@ function atOrigoX(mapper, height) {
 
 <style lang="scss" scoped>
 @import '../../assets/fontawesome/css/all.min.css';
+@import '../../styles/checkbox.scss';
 svg {
   position: absolute;
   margin: 0px;
@@ -237,7 +253,7 @@ path {
   line-height: 0px;
 
   div {
-    transition: height 0.3s ease, border-radius 0.3s ease;
+    transition: height 0.3s ease, border-radius 0.3s ease, background-color 0.3s ease;
     border-radius: 3px 3px 10px 10px;
     margin: auto;
     width: 20px;
@@ -246,7 +262,7 @@ path {
   }
 
   .checked {
-    transition: height 0.3s ease-out;
+    transition: height 0.3s ease-out, background-color 0.3s ease;
     filter: grayscale(40%);
     height: 30px;
   }
@@ -291,6 +307,7 @@ path {
   background-color: #ececec;
   display: flex;
   flex-direction: column;
+  border: 1px solid #1e4b36;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
@@ -299,27 +316,25 @@ path {
   grid-template-columns: repeat(5, 1fr);
   padding: 3px;
   border-bottom: 1px solid #8e9e92;
+  text-align: center;
 
   &:nth-child(2n + 1) {
     background: #dce2de;
     border-bottom: 1px solid #8e9e92;
-    font-weight: bold;
   }
-  &:nth-child(1) {
-    background: #bec5c0;
-    border-bottom: 1px solid #8e9e92;
-  }
+}
 
-  // &:nth-child(2n + 1) {
-  //   background: red;
-  // }
+.line_settings_container {
+  margin: 0px;
+  padding: 0px;
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.5s;
+  transition: all 0.2s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter,
+.fade-leave-to {
   transform: scaleX(0.1) scaleY(0.1);
   opacity: 0;
 }
