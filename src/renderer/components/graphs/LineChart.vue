@@ -20,8 +20,10 @@
         </div>
         <transition name="fade">
             <div v-show="showSettings" @click.self="closeSettings" class="modal">
-                <div class="modal_content">
+                <div class="modal_content" @click="closeColor">
+                    <chrome-picker v-show="showColor" :value="line.color" @input="updateValue"></chrome-picker>
                     <div class="settings_bar">
+                        <span>Line settings</span>
                         <a @click="closeSettings" class="settings_bar_button left fas fa-times"></a>
                     </div>
 
@@ -39,7 +41,10 @@
                     >
                         <transition-group type="transition" :name="!drag ? 'flip-list' : null">
                             <li class="line_settings" v-for="line in lines" :key="line.order">
-                                <input type="color" v-model="line.color">
+                                <a class="open_color" @click="openColor(line)">
+                                    <div class="color_accent" :style="'background:' + line.color"></div>
+                                </a>
+                                <!-- <input type="color" v-model="line.color"> -->
                                 <!-- <input type="checkbox" v-model="line.render"> -->
                                 <label class="container">
                                     <input type="checkbox" class="radioinput" v-model="line.render">
@@ -57,13 +62,18 @@
 <script>
 import * as d3 from 'd3';
 import Draggable from 'vuedraggable';
+import { Chrome } from 'vue-color';
+
 export default {
   name: 'VueLineChart',
   components: {
-    Draggable
+    Draggable,
+    'chrome-picker': Chrome
   },
   data() {
     return {
+      showColor: false,
+      line: { color: '' },
       drag: false,
       data: [
         [1, [0, 1, 2]], //
@@ -105,8 +115,22 @@ export default {
     window.removeEventListener('resize', this.onResize);
   },
   methods: {
+    openColor(line) {
+      this.line = line;
+      this.showColor = true;
+    },
+    closeColor(e) {
+      this.showColor = e.path[0].classList.contains('open_color') || e.path[0].className.startsWith('vc') || e.path[1].classList.contains('open_color');
+    },
+    updateValue(color) {
+      this.line.color = color.hex;
+    },
     closeSettings(event) {
-      this.showSettings = false;
+      if (this.showColor) {
+        this.showColor = false;
+      } else {
+        this.showSettings = false;
+      }
     },
     openSettings() {
       this.showSettings = true;
@@ -302,6 +326,7 @@ path {
 }
 
 .modal_content {
+  position: relative;
   margin: 10% auto auto auto;
   width: 400px;
   background-color: #ececec;
@@ -314,11 +339,11 @@ path {
 .line_settings {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  padding: 3px;
+  padding: 2px;
   border-bottom: 1px solid #8e9e92;
   text-align: center;
 
-  &:nth-child(2n + 1) {
+  &:nth-child(2n + 2) {
     background: #dce2de;
     border-bottom: 1px solid #8e9e92;
   }
@@ -327,6 +352,35 @@ path {
 .line_settings_container {
   margin: 0px;
   padding: 0px;
+}
+
+.open_color {
+  border-radius: 2px;
+  width: 30px;
+  height: 20px;
+  border: 1px solid #666;
+  margin: auto;
+  position: relative;
+  background-color: #eee;
+
+  .color_accent {
+    position: absolute;
+    width: 20px;
+    height: 12px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    border-radius: 2px;
+    border: 1px solid rgb(27, 27, 27);
+  }
+}
+
+.vc-chrome {
+  position: absolute;
+  left: -227px;
+  top: 0;
 }
 
 .fade-enter-active,

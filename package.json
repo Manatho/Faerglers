@@ -65,6 +65,7 @@
     "leveldown": "^4.0.1",
     "levelup": "^4.0.0",
     "vue": "^2.5.16",
+    "vue-color": "^2.7.0",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
     "vuedraggable": "^2.18.1",
