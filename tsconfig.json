@@ -1,17 +1,18 @@
 {
-    "compilerOptions": {
-        "target": "es2015",
-        "moduleResolution": "node",
-        "pretty": true,
-        "newLine": "LF",
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "strictNullChecks": false,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "sourceMap": true,
-        "skipLibCheck": true,
-        "jsx": "preserve"
-    },
-    "exclude": ["dist"]
+  "compilerOptions": {
+    "target": "es2015",
+    "moduleResolution": "node",
+    "pretty": true,
+    "newLine": "LF",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "jsx": "preserve"
+  },
+  "exclude": ["dist"]
 }
